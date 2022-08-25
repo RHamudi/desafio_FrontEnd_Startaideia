@@ -1,8 +1,7 @@
-/* eslint-disable react/react-in-jsx-scope */
-/* eslint-disable react/jsx-filename-extension */
+import Home from './Components/Pages/Home';
 
 function App() {
-  return <div>app</div>;
+  return <Home />;
 }
 
 export default App;
