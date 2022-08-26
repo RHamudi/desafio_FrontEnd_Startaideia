@@ -14,5 +14,6 @@ module.exports = {
     "react/jsx-filename-extension": [1, { extensions: [".js"] }],
     "react/react-in-jsx-scope": "off",
     "react/jsx-no-undef": "off",
+    "react/jsx-no-bind": 0,
   },
 };

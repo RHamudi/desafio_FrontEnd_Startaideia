@@ -1,4 +1,8 @@
+/* eslint-disable no-unused-expressions */
 import styled from "styled-components";
+
+import { CgPlayListRemove } from "react-icons/cg";
+import { Delete } from "../useFetch/Fetch";
 
 const Div = styled.div`
   margin-top: 1rem;
@@ -8,6 +12,31 @@ const Div = styled.div`
   border: 1px solid #ebeaed;
   border-radius: 5px;
   opacity: 1;
+`;
+
+const DivButton = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const Button = styled.button`
+  display: flex;
+  align-items: center;
+  padding: 3px 10px;
+  color: #fff;
+  cursor: pointer;
+  border: none;
+  background: #f95e5a 0% 0% no-repeat padding-box;
+  border-radius: 5px;
+  transition: 0.5s;
+
+  svg {
+    font-size: 1rem;
+  }
+
+  &:hover {
+    background: #cc4c4c;
+  }
 `;
 
 const H1 = styled.h1``;
@@ -25,18 +54,28 @@ const Tags = styled.p`
 `;
 
 /* eslint-disable react/prop-types */
-function Cards({ title, link, desc, tags }) {
+function Cards({ title, link, desc, tags, id }) {
+  function handleDelete() {
+    Delete(`http://localhost:3004/tools/${id}`);
+    document.location.reload(true);
+  }
+
   return (
     <Div>
-      <H1>
-        <a href={link} target="_blank" rel="noreferrer">
-          {title}
-        </a>
-      </H1>
+      <DivButton>
+        <H1>
+          <a href={link} target="_blank" rel="noreferrer">
+            {title}
+          </a>
+        </H1>
+        <Button type="button" onClick={handleDelete}>
+          <CgPlayListRemove /> Remove
+        </Button>
+      </DivButton>
       <Desc>{desc}</Desc>
       <Tags>
         {tags.map((item) => (
-          <span>#{item}</span>
+          <span key={item}>#{item}</span>
         ))}
       </Tags>
     </Div>

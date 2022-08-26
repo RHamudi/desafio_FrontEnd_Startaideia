@@ -2,8 +2,23 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { MdAdd } from "react-icons/md";
+import Modal from "react-modal";
 import Cards from "../Cards/Cards";
 import { Get } from "../useFetch/Fetch";
+import Add from "../Pages/Add/Add";
+
+Modal.setAppElement("#root");
+
+const customStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+  },
+};
 
 const Div = styled.div``;
 
@@ -57,23 +72,49 @@ const Check = styled.input`
 const DivCards = styled.div``;
 
 function Search() {
-  const url = "http://localhost:3004/tools";
+  const [url, setUrl] = useState("http://localhost:3004/tools");
+
+  const [inputValue, setInputValue] = useState("");
+  const [radioValue, setRadioValue] = useState(false);
 
   const [dados, setDados] = useState([]);
 
+  const [modalOpen, setModalOpen] = useState(false);
+
+  function handleOpenModal() {
+    setModalOpen(true);
+  }
+
+  function handleCloseModal() {
+    setModalOpen(false);
+  }
+
+  function handleChange(e) {
+    setInputValue(e.target.value);
+    if (radioValue === false) {
+      setUrl(`http://localhost:3004/tools?q=${inputValue}`);
+    } else {
+      setUrl(`http://localhost:3004/tools?tags_like=${inputValue}`);
+    }
+  }
+
+  function handleRadio() {
+    setRadioValue(!radioValue);
+  }
+
   useEffect(() => {
     Get(url, setDados);
-  }, []);
+  }, [inputValue]);
 
   return (
     <Div>
       <Form>
         <div>
-          <Input />
-          <Check type="checkbox" id="check" />
+          <Input value={inputValue} onChange={handleChange} />
+          <Check type="checkbox" id="check" onClick={handleRadio} />
           <label htmlFor="check">Search in tags only</label>
         </div>
-        <Button type="button">
+        <Button type="button" onClick={handleOpenModal}>
           <MdAdd /> ADD
         </Button>
       </Form>
@@ -81,14 +122,21 @@ function Search() {
       <DivCards>
         {dados.map((item) => (
           <Cards
+            id={item.id}
             title={item.title}
-            key={item.id}
             link={item.link}
             desc={item.description}
             tags={item.tags}
           />
         ))}
       </DivCards>
+      <Modal
+        isOpen={modalOpen}
+        onRequestClose={handleCloseModal}
+        style={customStyles}
+      >
+        <Add />
+      </Modal>
     </Div>
   );
 }
