@@ -1,8 +1,23 @@
 /* eslint-disable no-unused-expressions */
 import styled from "styled-components";
+import { useState } from "react";
+import Modal from "react-modal";
 
 import { CgPlayListRemove } from "react-icons/cg";
-import { Delete } from "../useFetch/Fetch";
+import Remove from "./Remove";
+
+Modal.setAppElement("#root");
+
+const customStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+  },
+};
 
 const Div = styled.div`
   margin-top: 1rem;
@@ -55,9 +70,14 @@ const Tags = styled.p`
 
 /* eslint-disable react/prop-types */
 function Cards({ title, link, desc, tags, id }) {
-  function handleDelete() {
-    Delete(`http://localhost:3004/tools/${id}`);
-    document.location.reload(true);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  function handleOpenModal() {
+    setModalOpen(true);
+  }
+
+  function handleCloseModal() {
+    setModalOpen(false);
   }
 
   return (
@@ -68,7 +88,7 @@ function Cards({ title, link, desc, tags, id }) {
             {title}
           </a>
         </H1>
-        <Button type="button" onClick={handleDelete}>
+        <Button type="button" onClick={handleOpenModal}>
           <CgPlayListRemove /> Remove
         </Button>
       </DivButton>
@@ -78,6 +98,13 @@ function Cards({ title, link, desc, tags, id }) {
           <span key={item}>#{item}</span>
         ))}
       </Tags>
+      <Modal
+        isOpen={modalOpen}
+        onRequestClose={handleCloseModal}
+        style={customStyles}
+      >
+        <Remove close={handleCloseModal} id={id} />
+      </Modal>
     </Div>
   );
 }

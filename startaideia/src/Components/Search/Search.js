@@ -104,7 +104,7 @@ function Search() {
 
   useEffect(() => {
     Get(url, setDados);
-  }, [inputValue]);
+  }, [inputValue, url]);
 
   return (
     <Div>
